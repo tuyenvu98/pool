@@ -10,7 +10,7 @@
 #define SWORDFISH 300
 #define SWORDFISHRATE 1
 #define SHARK 1000
-#define SHARKRATE 5
+#define SHARKRATE 3
 class Fish
 {
     protected :

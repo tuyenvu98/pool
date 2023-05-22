@@ -14,7 +14,7 @@ using namespace std ;
 
 int main()
 {
-    Pool pool(20,20);
+    Pool pool(10,10);
     vector<Position> p = {{0,0},{2,3}, {4,0}};
     Penjing pen(p);
     FishFactory fac;
