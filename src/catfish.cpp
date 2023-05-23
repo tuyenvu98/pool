@@ -9,6 +9,7 @@ CatFish::CatFish ()
     strength = CATFISH;
 }
 
+
 CatFish::CatFish (int x,int y )
 {
     pos.x= x;
@@ -28,9 +29,8 @@ void CatFish::move(std::vector<Position> p)
     Position r(-1,-1);
     while(std::find(p.begin(),p.end(),r)==p.end())
     {
-        auto f = []{return (rand() % 2) * (rand() & 1 ? 1 : -1);};
-        int dx = f();
-        int dy = f();
+        int dx = random(CATFISHSTEP);
+        int dy = random(CATFISHSTEP);
         r.x =pos.x +dx;
         r.y =pos.y +dy; 
     } 

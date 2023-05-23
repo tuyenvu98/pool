@@ -1,7 +1,5 @@
 #include "fish.h"
 
-
-
 class CatFish: public Fish
 {
     public :

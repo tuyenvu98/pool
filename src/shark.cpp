@@ -21,15 +21,15 @@ std::string Shark::name()
 }
         
 /*Each fish has beginning strength SHARK, and its strength decreases by SHARKRATE % after each move
-Shark move randomly up down left or right with step in range [0,2]*/
+Shark move randomly in radius SHARKSTEP*/
 void Shark::move(std::vector<Position> p)
 {
     Position r(-1,-1);
     while(std::find(p.begin(),p.end(),r)==p.end())
     {
-        auto f = []{return (rand() % 3) * (rand() & 1 ? 1 : -1);};
-        int dx = f();
-        int dy = f();
+        int dx = random(SHARKSTEP);
+        int tmp = (int)(sqrt(SHARKSTEP*SHARKSTEP-dx*dx));
+        int dy = random(tmp);
         r.x =pos.x +dx;
         r.y =pos.y +dy; 
     } 

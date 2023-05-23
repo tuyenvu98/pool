@@ -3,8 +3,6 @@
 #include <algorithm>
 //A pool object will include penjing and a vector of fishes
 
-
-using namespace std;
 Pool::Pool(int h, int w)
 {
     h_ = h;
@@ -30,7 +28,15 @@ vector<Fish*> Pool::getFishes()
 // legalPos is a list of possible positions for fishes to move, it will be in side the pool but outside the penjing 
 void Pool::setP(Penjing p)
 {
-    p_=p;
+    bool check=true;
+    for(auto pole:p.getPoles())
+        if (pole.x>w_ ||pole.y>h_)
+            {
+                std::cout <<"Can not put this penjing to the pool as it is too big" << endl;
+                check=false;
+            }
+    if (check)
+        p_=p;
     for (int i =0 ;i<=h_; i++)
         for (int j =0 ;j<=w_; j++)
         {

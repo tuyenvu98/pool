@@ -1,7 +1,7 @@
 #include "swordfish.h"
-#include <stdlib.h> 
 #include <vector>
 #include <algorithm>
+
 
 
 SwordFish::SwordFish ()
@@ -21,15 +21,18 @@ std::string SwordFish::name()
     return "Sword Fish";
 }
 /*Each fish has beginning strength SWORDFISH, and its strength decreases by SWORDFISHRATE % after each move
-Sword fish move randomly to any possible position*/
+Sword fish move randomly in radius CATFISHSTEP*/
 
 void SwordFish::move(std::vector<Position> p)
 {
     Position r(-1,-1);
     while(std::find(p.begin(),p.end(),r)==p.end())
     {
-        r.x=rand()%50;
-        r.y=rand()%50;
+        int dx = random(SWORDFISHSTEP);
+        int tmp = (int)(sqrt(SWORDFISHSTEP*SWORDFISHSTEP-dx*dx));
+        int dy = random(tmp);
+        r.x =pos.x +dx;
+        r.y =pos.y +dy; 
     }
     pos=r;
     strength -= SWORDFISH*SWORDFISHRATE*0.01;

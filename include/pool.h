@@ -7,6 +7,7 @@ class Pool
 {
     public:     
         Pool(int,int);
+        Pool()=default;
         int getH();
         int getW();
         vector<Fish*> getFishes();
