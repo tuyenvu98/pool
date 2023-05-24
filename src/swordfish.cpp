@@ -3,7 +3,6 @@
 #include <algorithm>
 
 
-
 SwordFish::SwordFish ()
 {
     strength = SWORDFISH;

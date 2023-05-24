@@ -24,7 +24,12 @@ vector<Fish*> Pool::getFishes()
     return fishes;
 }
 
-// Add penjing to the pool
+vector<Position> Pool::getLegalPos()
+{
+    return legalPos;
+}
+
+// Add penjing to the pool if it is not bigger than the pool
 // legalPos is a list of possible positions for fishes to move, it will be in side the pool but outside the penjing 
 void Pool::setP(Penjing p)
 {
@@ -48,14 +53,46 @@ void Pool::setP(Penjing p)
 
 void Pool::show()
 {
+    cout <<"---------------------------------------------------------------"<<endl;
 
     cout << "Fishes : "<<fishes.size()<<endl;
-
+    vector<Position> Shark,CatFish,SwordFish;
     for (auto i : fishes)
     {
         cout << i->name() << " with Pos :" <<i->getPos().x << ","<< i->getPos().y << " and  strength: " << i->getStrength()<< endl;
+        if(i->name() == "Shark")
+            Shark.push_back(i->getPos());
+        else if(i->name() == "Sword Fish")
+            SwordFish.push_back(i->getPos());
+        else
+            CatFish.push_back(i->getPos());
     }
+
+    for (int i=h_-1;i>=0;i--)
+        {
+            cout<< i<<"|";
+            for (int j=0;j<w_;j++)
+                {
+                    Position tmp(j,i);
+                    if (std::find(Shark.begin(),Shark.end(),tmp)!=Shark.end())
+                        cout << "S|";
+                    else if (std::find(SwordFish.begin(),SwordFish.end(),tmp)!=SwordFish.end())
+                        cout << "W|";
+                    else if (std::find(CatFish.begin(),CatFish.end(),tmp)!=CatFish.end())
+                        cout << "C|";
+                    else if(std::find(legalPos.begin(),legalPos.end(),tmp)!=legalPos.end())
+                        cout << "_|";
+                    else
+                        cout<<"X|";
+                }
+            cout<<endl;
+        }
+    cout <<" |";
+    for (int i=0;i<w_;i++)
+        cout << i<< "|";
+    cout << endl;
     cout <<"---------------------------------------------------------------"<<endl;
+        
 }
 
 //Add fish to the list of fishes
@@ -71,7 +108,7 @@ void Pool::fight ()
     if(fishes.size() <=1)
         return;
 
-    auto f = [](Fish* a, Fish* b){return a->getStrength() >=b->getStrength();};
+    auto f = [&](Fish* a, Fish* b){return a->getStrength() >=b->getStrength();};
 
     std::sort(fishes.begin(),fishes.end(),f);
     auto it =fishes.begin();
@@ -81,7 +118,10 @@ void Pool::fight ()
         auto comparePosition = [&]( Fish* a){return (*it)->getPos()==a->getPos();};
         for (auto it2 =it+1;it2!=fishes.end();it2++)
             if(comparePosition(*it2))
-                (*it)->eat(*it2);
+                {
+                    (*it)->eat(*it2);
+                    cout << (*it)->name() << " ate " << (*it2)->name() << endl;
+                }
         //Remove killed fishes eaten by *it
         auto killed = std::remove_if(it+1,fishes.end(),comparePosition); 
         fishes.erase(killed,fishes.end());

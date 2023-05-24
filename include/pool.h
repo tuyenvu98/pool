@@ -16,7 +16,7 @@ class Pool
         void show();
         void fight();
         void makeMove();
-
+        vector<Position> getLegalPos();
 
     private :
         int h_;
