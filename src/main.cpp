@@ -20,8 +20,12 @@ Pool setUp()
         cin >> h>>w;
     Pool pool(h,w);
     vector<Position> p = {{2,0},{4,4},{7,0}};
-    Penjing pen(p);
-    pool.setP(pen);
+    Obstacle pen(p,"Penjing");
+    vector<Position> sw = {{3,5},{6,8},{6,5}};
+
+    Obstacle seaWeed(sw,"SeaWeed");
+    pool.setObstacle(pen);
+    pool.setObstacle(seaWeed);
     FishFactory fac(pool.getLegalPos());
     unsigned int shark, sword,cat;
     cout << "Enter the number of Shark, Sword fish and Cat fish to put to the pool :" << endl;
@@ -40,8 +44,11 @@ Pool def()
 {
     Pool pool(10,10);
     vector<Position> p = {{2,0},{4,4},{7,0}};
-    Penjing pen(p);
-    pool.setP(pen);
+    Obstacle pen(p,"Penjing");
+    pool.setObstacle(pen);
+    vector<Position> sw = {{3,5},{6,8},{6,5}};
+    Obstacle seaWeed(sw,"SeaWeed");
+    pool.setObstacle(seaWeed);
     FishFactory fac(pool.getLegalPos());
     Fish* f1 = fac.create("SwordFish");
     Fish* f2 = fac.create("CatFish");

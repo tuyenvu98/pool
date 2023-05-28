@@ -1,13 +1,17 @@
 #include <vector>
 #include "position.h"
+#include <string>
+
 using namespace std;
-class Penjing
+class Obstacle
 {
     std::vector<Position> poles;
+    std::string name_;
     public :
-        Penjing ()= default;
-        Penjing( vector<Position> p);
+        Obstacle ()= default;
+        Obstacle( vector<Position> p,std::string );
 
         std::vector<Position> getPoles();
         bool checkPointInside(Position);
+        std::string name();
 };

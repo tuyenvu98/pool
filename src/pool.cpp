@@ -1,12 +1,18 @@
 #include "pool.h"
 #include <iostream>
 #include <algorithm>
-//A pool object will include penjing and a vector of fishes
+//A pool object will include Obstacle and a vector of fishes
 
 Pool::Pool(int h, int w)
 {
     h_ = h;
     w_ = w;
+    for (int i =0 ;i<=h_; i++)
+        for (int j =0 ;j<=w_; j++)
+        {
+            Position pos(i,j);
+            legalPos.push_back(pos);
+        }
 }
 
 int Pool::getH()
@@ -29,27 +35,85 @@ vector<Position> Pool::getLegalPos()
     return legalPos;
 }
 
-// Add penjing to the pool if it is not bigger than the pool
-// legalPos is a list of possible positions for fishes to move, it will be in side the pool but outside the penjing 
-void Pool::setP(Penjing p)
+vector<Position> Pool::getLegalPos()
+{
+    return blindPos;
+}
+// Add Obstacle to the pool if it is not bigger than the pool
+// legalPos is a list of possible positions for fishes to move, it will be in side the pool but outside the Obstacle 
+void Pool::setObstacle(Obstacle p)
 {
     bool check=true;
     for(auto pole:p.getPoles())
         if (pole.x>w_ ||pole.y>h_)
             {
-                std::cout <<"Can not put this penjing to the pool as it is too big" << endl;
+                std::cout <<"Can not put this " <<p.name()<< " to the pool as it is too big" << endl;
                 check=false;
             }
     if (check)
         p_=p;
-    for (int i =0 ;i<=h_; i++)
-        for (int j =0 ;j<=w_; j++)
+    
+    auto checkInside =[&](Position pos){return p.checkPointInside(pos);};
+    for(auto pos:legalPos)
+    {
+        if(p.name()=="Penjing")
         {
-            Position pos(i,j);
-            if (!p.checkPointInside(pos))
-                legalPos.push_back(pos);
-        }    
+            auto illegal = std::remove_if(legalPos.begin(),legalPos.end(),checkInside);
+            legalPos.erase(illegal,legalPos.end());
+        }
+        else if (p.name()=="SeaWeed")
+            if (p.checkPointInside(pos))
+                blindPos.push_back(pos);
+    }
+
 }
+
+/*void Pool::show()
+{
+    cout <<"---------------------------------------------------------------"<<endl;
+
+    cout << "Fishes : "<<fishes.size()<<endl;
+    vector<Position> Shark,CatFish,SwordFish;
+    for (auto i : fishes)
+    {
+        cout << i->name() << " with Pos :" <<i->getPos().x << ","<< i->getPos().y << " and  strength: " << i->getStrength()<< endl;
+        if(i->name() == "Shark")
+            Shark.push_back(i->getPos());
+        else if(i->name() == "Sword Fish")
+            SwordFish.push_back(i->getPos());
+        else
+            CatFish.push_back(i->getPos());
+    }
+
+    for (int i=h_;i>=0;i--)
+        {
+            cout<< i<<"\t|";
+            for (int j=0;j<=w_;j++)
+                {
+                    Position tmp(j,i);
+                    if (std::find(Shark.begin(),Shark.end(),tmp)!=Shark.end())
+                        cout << "S|";
+                    else if (std::find(SwordFish.begin(),SwordFish.end(),tmp)!=SwordFish.end())
+                        cout << "W|";
+                    else if (std::find(CatFish.begin(),CatFish.end(),tmp)!=CatFish.end())
+                        cout << "C|";
+                    else if (std::find(blindPos.begin(),blindPos.end(),tmp)!=blindPos.end())
+                        cout<<"B|";
+                    else if(std::find(legalPos.begin(),legalPos.end(),tmp)!=legalPos.end())
+                        cout << "_|";
+                    else
+                        cout<<"X|";
+                }
+            cout<<endl;
+        }
+    cout <<" \t|";
+    for (int i=0;i<=w_;i++)
+        cout << i<< "|";
+    cout << endl;
+    cout <<"---------------------------------------------------------------"<<endl;
+        
+}*/
+
 
 void Pool::show()
 {
@@ -68,27 +132,29 @@ void Pool::show()
             CatFish.push_back(i->getPos());
     }
 
-    for (int i=h_-1;i>=0;i--)
+    for (int i=h_;i>=0;i--)
         {
-            cout<< i<<"|";
-            for (int j=0;j<w_;j++)
+            cout<< i<<"\t|";
+            for (int j=0;j<=w_;j++)
                 {
                     Position tmp(j,i);
                     if (std::find(Shark.begin(),Shark.end(),tmp)!=Shark.end())
-                        cout << "S|";
+                        cout<<"\033[1;34mS\033[0m"<<"|";
                     else if (std::find(SwordFish.begin(),SwordFish.end(),tmp)!=SwordFish.end())
-                        cout << "W|";
+                        cout<<"\033[1;34mW\033[0m"<<"|";
                     else if (std::find(CatFish.begin(),CatFish.end(),tmp)!=CatFish.end())
-                        cout << "C|";
+                        cout<<"\033[1;34mC\033[0m"<<"|";
+                    else if (std::find(blindPos.begin(),blindPos.end(),tmp)!=blindPos.end())
+                        cout<<"\033[1;32mB\033[0m"<<"|";
                     else if(std::find(legalPos.begin(),legalPos.end(),tmp)!=legalPos.end())
                         cout << "_|";
                     else
-                        cout<<"X|";
+                        cout<<"\033[1;31mX\033[0m"<<"|";
                 }
             cout<<endl;
         }
-    cout <<" |";
-    for (int i=0;i<w_;i++)
+    cout <<" \t|";
+    for (int i=0;i<=w_;i++)
         cout << i<< "|";
     cout << endl;
     cout <<"---------------------------------------------------------------"<<endl;
@@ -115,16 +181,19 @@ void Pool::fight ()
     
     while(it !=fishes.end())
     {
-        auto comparePosition = [&]( Fish* a){return (*it)->getPos()==a->getPos();};
-        for (auto it2 =it+1;it2!=fishes.end();it2++)
-            if(comparePosition(*it2))
-                {
-                    (*it)->eat(*it2);
-                    cout << (*it)->name() << " ate " << (*it2)->name() << endl;
-                }
-        //Remove killed fishes eaten by *it
-        auto killed = std::remove_if(it+1,fishes.end(),comparePosition); 
-        fishes.erase(killed,fishes.end());
+        if (std::find(blindPos.begin(),blindPos.end(),(*it)->getPos())==blindPos.end())
+        {
+            auto comparePosition = [&]( Fish* a){return (*it)->getPos()==a->getPos();};
+            for (auto it2 =it+1;it2!=fishes.end();it2++)
+                if(comparePosition(*it2))
+                    {
+                        (*it)->eat(*it2);
+                        cout << (*it)->name() << " ate " << (*it2)->name() << endl;
+                    }
+            //Remove killed fishes eaten by *it
+            auto killed = std::remove_if(it+1,fishes.end(),comparePosition); 
+            fishes.erase(killed,fishes.end());
+        }
         it++;
     }
 }

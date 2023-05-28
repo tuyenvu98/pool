@@ -1,18 +1,26 @@
-#include "penjing.h"
+#include "obstacle.h"
 #include <cmath>
-using namespace std;
+#include <iostream>
 
-Penjing::Penjing( vector<Position> p)
+
+Obstacle::Obstacle( vector<Position> p,string name)
 {   
     poles =p;
+    name_ =name;
 }
 
- std::vector<Position> Penjing::getPoles()
+std::vector<Position> Obstacle::getPoles()
 {
     return poles;
 }
 
-/*To check if a point is inside the penjing (illegal position to move to)
+std::string Obstacle::name()
+{
+    return name_;
+}
+
+
+/*To check if a point is inside the Obstacle 
  Ex : point M is inside polygon ABCD when S(MAB)+S(MBC)+S(MCD)+S(MDA) = S(ABCD) */
 
 //Return distance between 2 positions
@@ -30,8 +38,8 @@ double triangleSquare(Position a, Position b, Position c)
     //Perimeter of triangle
     double per = (ab+bc+ca)/2;
     //Square of triangle
-    double square = sqrt(per * (per-ab) * (per-bc) * (per -ca));
-    return square;
+    double square = sqrt(abs(per * (per-ab) * (per-bc) * (per -ca)));
+    return (square<1e-6)? 0: square;
 }
 //Return S(MAB)+S(MBC)+S(MCD)+S(MDA) 
 double getSquare(Position p,vector<Position> pos)
@@ -47,9 +55,9 @@ double getSquare(Position p,vector<Position> pos)
     return sum;
 }
 
-bool Penjing::checkPointInside(Position pos)
+bool Obstacle::checkPointInside(Position pos)
 {
-
+    //std::cout <<  getSquare(pos,poles)-getSquare(*(poles.begin()),poles)<<std::endl;
     if(poles.size() <3 || abs( getSquare(pos,poles)-getSquare(*(poles.begin()),poles)) > 1e-9)
         return false;
     return true;

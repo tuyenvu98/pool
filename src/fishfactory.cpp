@@ -7,7 +7,7 @@ FishFactory::FishFactory(std::vector<Position> legalPos)
  
 Fish* FishFactory::create (std::string type)
 {
-    int n=random(legalPos_.size()-1);
+    int n=abs(random(legalPos_.size()-1));
     Position pos = legalPos_[n];
     if (type == "CatFish")
     {

@@ -1,6 +1,6 @@
 #include <vector>
 #include "fish.h"
-#include "penjing.h"
+#include "obstacle.h"
 
 using namespace std;
 class Pool
@@ -11,19 +11,21 @@ class Pool
         int getH();
         int getW();
         vector<Fish*> getFishes();
-        void setP(Penjing);
+        void setObstacle(Obstacle);
         void addFish(Fish *);
         void show();
         void fight();
         void makeMove();
         vector<Position> getLegalPos();
+        vector<Position> getBlindPos();
 
     private :
         int h_;
         int w_;
-        Penjing p_ ;
+        Obstacle p_ ;
         vector<Fish*> fishes;
         vector<Position> legalPos;
+        vector<Position> blindPos;
 
         
 };
