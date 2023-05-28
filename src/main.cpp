@@ -21,7 +21,7 @@ Pool setUp()
     Pool pool(h,w);
     vector<Position> p = {{2,0},{4,4},{7,0}};
     Obstacle pen(p,"Penjing");
-    vector<Position> sw = {{3,5},{6,8},{6,5}};
+    vector<Position> sw = {{0,5},{6,8},{8,3}};
 
     Obstacle seaWeed(sw,"SeaWeed");
     pool.setObstacle(pen);

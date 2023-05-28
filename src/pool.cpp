@@ -29,12 +29,13 @@ vector<Fish*> Pool::getFishes()
 {
     return fishes;
 }
-
+//LegalPos is vector of posible position for fishes to move to
 vector<Position> Pool::getLegalPos()
 {
     return legalPos;
 }
 
+//blindPos is vector of position that cover by sea weed, fishes will not fight there
 vector<Position> Pool::getBlindPos()
 {
     return blindPos;
@@ -168,13 +169,15 @@ void Pool::addFish(Fish *f)
         fishes.push_back(f);
 }
 
-//Check if fishes meet each other, the stronger one eat weaker one
+/*Check if fishes meet each other,
+if they meet in the sea weed, nothing happens
+else the stronger one eat weaker one*/
 void Pool::fight ()
 {
     if(fishes.size() <=1)
         return;
 
-    auto f = [&](Fish* a, Fish* b){return a->getStrength() >=b->getStrength();};
+    auto f = [&](Fish* a, Fish* b){return a->getStrength() >b->getStrength();};
 
     std::sort(fishes.begin(),fishes.end(),f);
     auto it =fishes.begin();
