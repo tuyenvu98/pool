@@ -35,7 +35,7 @@ vector<Position> Pool::getLegalPos()
     return legalPos;
 }
 
-vector<Position> Pool::getLegalPos()
+vector<Position> Pool::getBlindPos()
 {
     return blindPos;
 }
