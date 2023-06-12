@@ -1,17 +1,17 @@
-#include "swordfish.h"
-#include "catfish.h"
-#include "shark.h"
-#include<string>
+#pragma once
+#include<vector>
+#include "fish.h"
+#include "position.h"
 
-//Simple factory to create fish by type name
+//Base factory to create fish 
 
 class FishFactory
 {
 
-std::vector<Position> legalPos_;
+protected:
+  std::vector<Position> legalPos_;
 public:
-  FishFactory(std::vector<Position> );
-  Fish* create (std::string );
+  virtual Fish* create()=0;
  
 };
  

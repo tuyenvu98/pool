@@ -1,4 +1,6 @@
-#include "fishfactory.h"
+#include "sharkfactory.h"
+#include "swordfishfactory.h"
+#include "catfishfactory.h"
 #include "pool.h"
 #include <iostream>
 #include <unistd.h>
@@ -26,16 +28,18 @@ Pool setUp()
     Obstacle seaWeed(sw,"SeaWeed");
     pool.setObstacle(pen);
     pool.setObstacle(seaWeed);
-    FishFactory fac(pool.getLegalPos());
+    FishFactory * f1 = new SharkFactory(pool.getLegalPos());
+    FishFactory * f2 = new CatFishFactory(pool.getLegalPos());
+    FishFactory * f3 = new SwordFishFactory(pool.getLegalPos());
     unsigned int shark, sword,cat;
     cout << "Enter the number of Shark, Sword fish and Cat fish to put to the pool :" << endl;
     cin >> shark >>sword>> cat;
     for(int i=0;i<shark;i++)
-        pool.addFish(fac.create("Shark"));
+        pool.addFish(f1->create());
     for(int i=0;i<sword;i++)
-        pool.addFish(fac.create("SwordFish"));
+        pool.addFish(f2->create());
     for(int i=0;i<cat;i++)
-        pool.addFish(fac.create("CatFish"));
+        pool.addFish(f3->create());
     return pool;
 
 }
@@ -49,13 +53,12 @@ Pool def()
     vector<Position> sw = {{3,5},{6,8},{6,5}};
     Obstacle seaWeed(sw,"SeaWeed");
     pool.setObstacle(seaWeed);
-    FishFactory fac(pool.getLegalPos());
-    Fish* f1 = fac.create("SwordFish");
-    Fish* f2 = fac.create("CatFish");
-    Fish* f3 = fac.create("Shark");
-    pool.addFish (f1);
-    pool.addFish (f2);
-    pool.addFish (f3);
+    FishFactory * f1 = new SharkFactory(pool.getLegalPos());
+    FishFactory * f2 = new CatFishFactory(pool.getLegalPos());
+    FishFactory * f3 = new SwordFishFactory(pool.getLegalPos());
+    pool.addFish (f1->create());
+    pool.addFish (f2->create());
+    pool.addFish (f3->create());
     return pool;
 }
 
